@@ -2,6 +2,7 @@ name: Saguaro
 author: ${project.author}
 version: ${project.version}
 main: com.winterhaven_mc.saguaro.SaguaroMain
+api-version: 1.13
 
 commands:
    saguaro:
