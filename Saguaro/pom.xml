@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.winterhaven_mc</groupId>
 	<artifactId>Saguaro</artifactId>
-	<version>1.0</version>
+	<version>1.0.0</version>
 	<name>Saguaro</name>
 	<description>monitor server statistics and output for graphing with Cacti</description>
 
