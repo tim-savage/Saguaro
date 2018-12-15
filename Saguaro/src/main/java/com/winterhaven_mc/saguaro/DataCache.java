@@ -2,15 +2,14 @@ package com.winterhaven_mc.saguaro;
 
 import java.io.File;
 
+import com.winterhaven_mc.saguaro.tasks.TpsMeter;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class DataCache {
 
-	final SaguaroMain plugin;
-
-	private long serverStartTime = 0;
+	private long serverStartTime;
 
 	private double tps = 0;
 	private long uptime = 0;
@@ -26,15 +25,13 @@ public class DataCache {
 
 	/**
 	 * Class constructor method
-	 * 
-	 * @param plugin
+	 * @param plugin reference to plugin main class
 	 */
-	DataCache(final SaguaroMain plugin) {
-		this.plugin = plugin;
+	DataCache(final PluginMain plugin) {
+
 		this.serverStartTime = System.currentTimeMillis();
 
-		// Create the task anonymously and schedule to run every 30 seconds (600
-		// ticks)
+		// Create the task anonymously and schedule to run every 30 seconds (600 ticks)
 		new BukkitRunnable() {
 
 			@Override
@@ -50,12 +47,12 @@ public class DataCache {
 					totalWorldSize += FileUtils.sizeOfDirectory(new File(world
 							.getWorldFolder().getAbsolutePath()));
 				}
+
 				setEntityCount(entityCount);
 				setChunkCount(chunkCount);
 				setTotalWorldSize(totalWorldSize);
-				setPluginCount(plugin.getServer().getPluginManager()
-						.getPlugins().length);
-				setPlayerCount(plugin.getServer().getOnlinePlayers().length);
+				setPluginCount(plugin.getServer().getPluginManager().getPlugins().length);
+				setPlayerCount(plugin.getServer().getOnlinePlayers().size());
 				setPlayerMax(plugin.getServer().getMaxPlayers());
 				setMemoryMax(Runtime.getRuntime().maxMemory());
 				setMemoryTotal(Runtime.getRuntime().totalMemory());
@@ -66,114 +63,147 @@ public class DataCache {
 		}.runTaskTimer(plugin, 0, 600);
 	}
 
+
 	public synchronized String getDataString() {
 
-		String dataString = "";
-		dataString = dataString + "uptime:" + getUptime() + " ";
-		dataString = dataString + "tps:";
-		if (getTps() < 0) {
-			dataString = dataString + "U" + " ";
-		} else {
-			dataString = dataString + getTps() + " ";
-		}
-		dataString = dataString + "playerCount:" + getPlayerCount() + " ";
-		dataString = dataString + "playerMax:" + getPlayerMax() + " ";
-		dataString = dataString + "memMax:" + getMemoryMax() + " ";
-		dataString = dataString + "memTotal:" + getMemoryTotal() + " ";
-		dataString = dataString + "memFree:" + getMemoryFree() + " ";
-		dataString = dataString + "pluginCount:" + getPluginCount() + " ";
-		dataString = dataString + "chunkCount:" + getChunkCount() + " ";
-		dataString = dataString + "entityCount:" + getEntityCount() + " ";
-		dataString = dataString + "worldSize:" + getTotalWorldSize() + " ";
+		StringBuilder data = new StringBuilder();
 
-		return dataString.trim();
+		data.append("uptime:");
+		data.append(getUptime());
+		data.append(' ');
+
+		data.append("tps:");
+		if (getTps() < 0) {
+			data.append("U");
+		} else {
+			data.append(getTps());
+		}
+		data.append(' ');
+
+		data.append("playerCount:");
+		data.append(getPlayerCount());
+		data.append(' ');
+
+		data.append("playerMax:");
+		data.append(getPlayerMax());
+		data.append(' ');
+
+		data.append("memMax:");
+		data.append(getMemoryMax());
+		data.append(' ');
+
+		data.append("memTotal:");
+		data.append(getMemoryTotal());
+		data.append(' ');
+
+		data.append("memFree:");
+		data.append(getMemoryFree());
+		data.append(' ');
+
+		data.append("pluginCount:");
+		data.append(getPluginCount());
+		data.append(' ');
+
+		data.append("chunkCount:");
+		data.append(getChunkCount());
+		data.append(' ');
+
+		data.append("entityCount:");
+		data.append(getEntityCount());
+		data.append(' ');
+
+		data.append("worldSize:");
+		data.append(getTotalWorldSize());
+		data.append(' ');
+
+		return data.toString().trim();
 	}
 
-	public double getTps() {
+	private double getTps() {
 		return tps;
 	}
 
-	public void setTps(double tps) {
+	private void setTps(double tps) {
 		this.tps = tps;
 	}
 
-	public long getUptime() {
+	private long getUptime() {
 		return uptime;
 	}
 
-	public void setUptime(long uptime) {
+	private void setUptime(long uptime) {
 		this.uptime = uptime;
 	}
 
-	public int getPlayerCount() {
+	private int getPlayerCount() {
 		return playerCount;
 	}
 
-	public void setPlayerCount(int playerCount) {
+	private void setPlayerCount(int playerCount) {
 		this.playerCount = playerCount;
 	}
 
-	public int getPlayerMax() {
+	private int getPlayerMax() {
 		return playerMax;
 	}
 
-	public void setPlayerMax(int playerMax) {
+	private void setPlayerMax(int playerMax) {
 		this.playerMax = playerMax;
 	}
 
-	public int getPluginCount() {
+	private int getPluginCount() {
 		return pluginCount;
 	}
 
-	public void setPluginCount(int pluginCount) {
+	private void setPluginCount(int pluginCount) {
 		this.pluginCount = pluginCount;
 	}
 
-	public int getEntityCount() {
+	private int getEntityCount() {
 		return entityCount;
 	}
 
-	public void setEntityCount(int entityCount) {
+	private void setEntityCount(int entityCount) {
 		this.entityCount = entityCount;
 	}
 
-	public int getChunkCount() {
+	private int getChunkCount() {
 		return chunkCount;
 	}
 
-	public void setChunkCount(int chunkCount) {
+	private void setChunkCount(int chunkCount) {
 		this.chunkCount = chunkCount;
 	}
 
-	public long getTotalWorldSize() {
+	private long getTotalWorldSize() {
 		return totalWorldSize;
 	}
 
-	public void setTotalWorldSize(long totalWorldSize) {
+	private void setTotalWorldSize(long totalWorldSize) {
 		this.totalWorldSize = totalWorldSize;
 	}
 
-	public long getMemoryMax() {
+	private long getMemoryMax() {
 		return memoryMax;
 	}
 
-	public void setMemoryMax(long memoryMax) {
+	private void setMemoryMax(long memoryMax) {
 		this.memoryMax = memoryMax;
 	}
 
-	public long getMemoryTotal() {
+	private long getMemoryTotal() {
 		return memoryTotal;
 	}
 
-	public void setMemoryTotal(long memoryTotal) {
+	private void setMemoryTotal(long memoryTotal) {
 		this.memoryTotal = memoryTotal;
 	}
 
-	public long getMemoryFree() {
+	private long getMemoryFree() {
 		return memoryFree;
 	}
 
-	public void setMemoryFree(long memoryFree) {
+	private void setMemoryFree(long memoryFree) {
 		this.memoryFree = memoryFree;
 	}
 
