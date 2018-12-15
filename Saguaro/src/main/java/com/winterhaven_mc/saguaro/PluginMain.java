@@ -2,38 +2,37 @@ package com.winterhaven_mc.saguaro;
 
 import java.io.IOException;
 
+import com.winterhaven_mc.saguaro.commands.CommandManager;
+import com.winterhaven_mc.saguaro.tasks.FileWriter;
+import com.winterhaven_mc.saguaro.tasks.TpsMeter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-public final class SaguaroMain extends JavaPlugin {
 
-	final Boolean debug = getConfig().getBoolean("debug");
+public final class PluginMain extends JavaPlugin {
 
-	CommandHandler commandHandler;
-	TelnetServer telnetServer;
-	DataCache dataCache;
+	public Boolean debug = getConfig().getBoolean("debug");
 
-	BukkitTask tpsMeterTask;
-	BukkitTask fileWriterTask;
-	int telnetPort;
+	public TelnetServer telnetServer;
+	public DataCache dataCache;
 
-	// get tps sample period from config file, or default to 60 (seconds)
-	int tpsSamplePeriod = getConfig().getInt("tps-sample-period", 60);
+	public BukkitTask tpsMeterTask;
+	public BukkitTask fileWriterTask;
 
-	// get file update period from config file, or default to 60 (seconds)
-	int fileUpdatePeriod = getConfig().getInt("file-update-period", 60);
 
+	@Override
 	public void onEnable() {
 
 		// copy default config from jar if it doesn't exist
 		saveDefaultConfig();
 
-		// register command handler
-		commandHandler = new CommandHandler(this);
+		// instantiate command manager
+		new CommandManager(this);
 
 		// instantiate TPS Meter
 		tpsMeterTask = new TpsMeter(this).runTaskTimer(this,
-				tpsSamplePeriod * 20, tpsSamplePeriod * 20);
+				getConfig().getInt("tps-sample-period") * 20,
+				getConfig().getInt("tps-sample-period") * 20);
 
 		// instantiate data cache
 		dataCache = new DataCache(this);
@@ -41,16 +40,15 @@ public final class SaguaroMain extends JavaPlugin {
 		// if configured, start file writer task
 		if (getConfig().getBoolean("file-output-enabled", false)) {
 			fileWriterTask = new FileWriter(this).runTaskTimer(this, 0,
-					fileUpdatePeriod * 20);
+					getConfig().getInt("file-update-period") * 20);
 		}
 
 		// if configured, start telnet server
-		if (getConfig().getBoolean("telnet-enabled", true)) {
-			telnetPort = getConfig().getInt("telnet-port", 25550);
+		if (getConfig().getBoolean("telnet-enabled")) {
 			try {
-				telnetServer = new TelnetServer(this, telnetPort);
+				telnetServer = new TelnetServer(this, getConfig().getInt("telnet-port"));
 				getLogger().info(
-						"Telnet server listening on port " + telnetPort);
+						"Telnet server listening on port " + getConfig().getInt("telnet-port"));
 			} catch (IOException e) {
 				getLogger().severe("Could not start telnet server!");
 				if (e.getLocalizedMessage() != null) {
@@ -61,9 +59,10 @@ public final class SaguaroMain extends JavaPlugin {
 				}
 			}
 		}
-
 	}
 
+
+	@Override
 	public void onDisable() {
 
 		// stop telnet server
@@ -83,7 +82,6 @@ public final class SaguaroMain extends JavaPlugin {
 
 		// cancel all remaining repeating tasks for this plugin
 		getServer().getScheduler().cancelTasks(this);
-
 	}
 
 }

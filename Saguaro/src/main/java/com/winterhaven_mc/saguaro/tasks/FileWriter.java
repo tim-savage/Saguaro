@@ -1,22 +1,24 @@
-package com.winterhaven_mc.saguaro;
+package com.winterhaven_mc.saguaro.tasks;
 
 import java.io.File;
 import java.io.IOException;
 
+import com.winterhaven_mc.saguaro.PluginMain;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class FileWriter extends BukkitRunnable {
 
-	SaguaroMain plugin;
-	String fileName;
+	private PluginMain plugin;
+	private String fileName;
 
 	/**
 	 * Class constructor method
 	 * 
-	 * @param plugin
+	 * @param plugin reference to plugin main class
 	 */
-	FileWriter(SaguaroMain plugin) {
+	public FileWriter(PluginMain plugin) {
+
 		this.plugin = plugin;
 		this.fileName = plugin.getDataFolder() + File.separator + "cacti_data.txt";
 	}

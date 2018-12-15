@@ -24,35 +24,32 @@ import java.io.OutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/***
+
+/**
  * Simple TCP server. Waits for connections on a TCP port in a separate thread.
  * 
  * Original code by:
- * 
  * @author Bruno D'Avanzo
- *
  * @author Modified by:<br>
  *         Tim Savage
  * 
- ***/
+ **/
+@SuppressWarnings("unused")
 public class TelnetServer implements Runnable {
 
 	// reference to main class
-	SaguaroMain plugin;
+	private final PluginMain plugin;
 
-	ServerSocket serverSocket = null;
-	Socket clientSocket = null;
-	Thread listener = null;
+	private final ServerSocket serverSocket;
+	private Socket clientSocket;
+	private final Thread listener;
 
-	/***
+
+	/**
 	 * test of client-driven subnegotiation.
-	 * 
-	 * 
-	 * 
-	 * @param port
-	 *            - server port on which to listen.
-	 ***/
-	public TelnetServer(SaguaroMain plugin, int port) throws IOException {
+	 * @param port server port on which to listen.
+	 **/
+	public TelnetServer(PluginMain plugin, int port) throws IOException {
 
 		this.plugin = plugin;
 
@@ -61,15 +58,16 @@ public class TelnetServer implements Runnable {
 		listener.start();
 	}
 
-	/***
+
+	/**
 	 * Run for the thread. Waits for new connections
-	 ***/
+	 **/
 	public void run() {
 		boolean bError = false;
 		while (!bError) {
 			try {
 				clientSocket = serverSocket.accept();
-				synchronized (clientSocket) {
+				synchronized (serverSocket) {
 					PrintWriter out = new PrintWriter(
 							clientSocket.getOutputStream(), true);
 					out.print(plugin.dataCache.getDataString() + "\n");
@@ -94,11 +92,12 @@ public class TelnetServer implements Runnable {
 		}
 	}
 
-	/***
+
+	/**
 	 * Disconnects the client socket
-	 ***/
+	 **/
 	public void disconnect() {
-		synchronized (clientSocket) {
+		synchronized (serverSocket) {
 			try {
 				clientSocket.notify();
 			} catch (Exception e) {
@@ -107,9 +106,10 @@ public class TelnetServer implements Runnable {
 		}
 	}
 
-	/***
+
+	/**
 	 * Stop the listener thread
-	 ***/
+	 **/
 	public void stop() {
 		listener.interrupt();
 		try {
@@ -119,9 +119,10 @@ public class TelnetServer implements Runnable {
 		}
 	}
 
-	/***
+
+	/**
 	 * Gets the input stream for the client socket
-	 ***/
+	 **/
 	public InputStream getInputStream() throws IOException {
 		if (clientSocket != null) {
 			return (clientSocket.getInputStream());
@@ -130,9 +131,10 @@ public class TelnetServer implements Runnable {
 		}
 	}
 
-	/***
+
+	/**
 	 * Gets the output stream for the client socket
-	 ***/
+	 **/
 	public OutputStream getOutputStream() throws IOException {
 		if (clientSocket != null) {
 			return (clientSocket.getOutputStream());
@@ -140,4 +142,5 @@ public class TelnetServer implements Runnable {
 			return (null);
 		}
 	}
+
 }

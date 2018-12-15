@@ -1,4 +1,4 @@
-# Configuration file for Saguaro plugin
+# Configuration file for ${project.name} v${project.version}
 
 # enable telnet server
 telnet-enabled: true
