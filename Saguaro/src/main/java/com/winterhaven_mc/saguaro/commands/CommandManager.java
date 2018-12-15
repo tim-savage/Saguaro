@@ -26,55 +26,80 @@ public class CommandManager implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args) {
-		
+
 		int maxArgs = 1;
 		if (args.length > maxArgs) {
 			sender.sendMessage("Too many arguments!");
 			return false;
 		}
 
-		// if called with no arguments, output config settings
+		// if called with no arguments, return false to display bukkit command usage
 		if (args.length < 1) {
-			sender.sendMessage(ChatColor.AQUA + "[Saguaro] Version " + plugin.getDescription().getVersion());
-			sender.sendMessage(ChatColor.AQUA + "[Saguaro] Telnet enabled: " + plugin.getConfig().getString("telnet-enabled"));
-			sender.sendMessage(ChatColor.AQUA + "[Saguaro] Listening Port: " + plugin.getConfig().getInt("telnet-port"));
-			sender.sendMessage(ChatColor.AQUA + "[Saguaro] File Output Enabled: " + plugin.getConfig().getString("file-output-enabled"));
-			sender.sendMessage(ChatColor.AQUA + "[Saguaro] File Update Period: " + plugin.getConfig().getInt("file-update-period"));
-			sender.sendMessage(ChatColor.AQUA + "[Saguaro] TPS Sample Period: " + plugin.getConfig().getInt("tps-sample-period"));
+			return false;
+		}
+
+		// get subcommand
+		String subCommand = args[0];
+
+		// reload command
+		if (subCommand.equalsIgnoreCase("reload")) {
+			return reloadCommand(sender);
+		}
+
+		// status command
+		if (subCommand.equalsIgnoreCase("status")) {
+			return statusCommand(sender);
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * Reload configuration
+	 *
+	 * @param sender the command sender
+	 * @return always returns {@code true}, to prevent usage message
+	 */
+	private boolean reloadCommand(final CommandSender sender) {
+
+		// check that sender has permission for reload command
+		if (!sender.hasPermission("saguaro.reload")) {
 			return true;
 		}
-		
-		String subCommand = args[0];
-		
-		// reload command
-		if (subCommand.equalsIgnoreCase("reload") && sender.hasPermission("saguaro.reload")) {
 
-			// reload config.yml
-			plugin.reloadConfig();
-			
-			// send reloaded message to command sender
-			sender.sendMessage(ChatColor.AQUA + "[Saguaro] config reloaded.");
-			
-			// stop telnet server if it is running
-			if (plugin.telnetServer != null) {
-				plugin.telnetServer.stop();
-			}
-			
-			// restart telnet server if configured
-			if (plugin.getConfig().getBoolean("telnet-enabled",true)) {
+		// re-install config file if necessary
+		plugin.saveDefaultConfig();
 
-				// read port from config file
-				final int telnetPort = plugin.getConfig().getInt("telnet-port");
+		// reload config file
+		plugin.reloadConfig();
 
-				// delay start of telnet server 2 seconds (40 ticks) to allow old server instance to close
-				new BukkitRunnable() {
+		// set debug field
+		plugin.debug = plugin.getConfig().getBoolean("debug");
 
-					@Override
-					public void run() {
+		// send reloaded message to command sender
+		sender.sendMessage(ChatColor.AQUA + "[Saguaro] config reloaded.");
+
+		// stop telnet server if it is running
+		if (plugin.telnetServer != null) {
+			plugin.telnetServer.stop();
+		}
+
+		// restart telnet server if configured
+		if (plugin.getConfig().getBoolean("telnet-enabled", true)) {
+
+			// read port from config file
+			final int telnetPort = plugin.getConfig().getInt("telnet-port");
+
+			// delay start of telnet server 2 seconds (40 ticks) to allow old server instance to close
+			new BukkitRunnable() {
+
+				@Override
+				public void run() {
 
 					// try to start telnet server on configured port
 					try {
-						plugin.telnetServer = new TelnetServer(plugin,telnetPort);
+						plugin.telnetServer = new TelnetServer(plugin, telnetPort);
 						sender.sendMessage(ChatColor.AQUA + "Telnet server listening on port "
 								+ ChatColor.DARK_AQUA + telnetPort + ChatColor.AQUA + ".");
 					} catch (IOException e) {
@@ -86,32 +111,84 @@ public class CommandManager implements CommandExecutor {
 							e.printStackTrace();
 						}
 					}
-					}
-				}.runTaskLater(plugin, 40);
-			}
-			
-			// cancel file writer task if it is running
-			if (plugin.fileWriterTask != null) {
-				plugin.fileWriterTask.cancel();
-			}
-			
-			// start new file writer task if configured
-			if (plugin.getConfig().getBoolean("file-output-enabled")) {
-				plugin.fileWriterTask = new FileWriter(plugin).runTaskTimer(plugin, 0,
-						plugin.getConfig().getInt("file-update-period") * 20);
-			}
-			
-			// restart TpsMeter
-			if (plugin.tpsMeterTask != null) {
-				plugin.tpsMeterTask.cancel();
-			}
-			plugin.tpsMeterTask = new TpsMeter(plugin).runTaskTimer(plugin,
-					plugin.getConfig().getInt("tps-sample-period") * 20,
-					plugin.getConfig().getInt("tps-sample-period") * 20);
-			
-			return true;
+				}
+			}.runTaskLater(plugin, 40);
 		}
-		return false;
+
+		// cancel file writer task if it is running
+		if (plugin.fileWriterTask != null) {
+			plugin.fileWriterTask.cancel();
+		}
+
+		// start new file writer task if configured
+		if (plugin.getConfig().getBoolean("file-output-enabled")) {
+			plugin.fileWriterTask = new FileWriter(plugin).runTaskTimer(plugin, 0,
+					plugin.getConfig().getInt("file-update-period") * 20);
+		}
+
+		// cancel TpsMeter task if it is running
+		if (plugin.tpsMeterTask != null) {
+			plugin.tpsMeterTask.cancel();
+		}
+
+		// start new TpsMeter task
+		plugin.tpsMeterTask = new TpsMeter(plugin).runTaskTimer(plugin,
+				plugin.getConfig().getInt("tps-sample-period") * 20,
+				plugin.getConfig().getInt("tps-sample-period") * 20);
+
+		return true;
 	}
-	
+
+
+	/**
+	 * Display plugin status
+	 * @param sender the command sender
+	 * @return always returns {@code true}, to prevent usage message
+	 */
+	private boolean statusCommand(final CommandSender sender) {
+
+		// check that sender has permission for status command
+		if (!sender.hasPermission("saguaro.status")) {
+			return false;
+		}
+
+		// output plugin name and version
+		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
+				+ ChatColor.AQUA + "Version: " + ChatColor.RESET + plugin.getDescription().getVersion());
+
+		// output debug setting if set true
+		if (plugin.debug) {
+			sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
+					+ ChatColor.GREEN + "DEBUG: "
+					+ ChatColor.DARK_RED + "true");
+		}
+
+		// output telnet server enabled setting
+		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
+				+ ChatColor.GREEN + "Telnet enabled: "
+				+ ChatColor.RESET + plugin.getConfig().getString("telnet-enabled"));
+
+		// output telnet port setting
+		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
+				+ ChatColor.GREEN + "Listening Port: "
+				+ ChatColor.RESET + plugin.getConfig().getInt("telnet-port"));
+
+		// output file output enabled setting
+		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
+				+ ChatColor.GREEN + "File Output Enabled: "
+				+ ChatColor.RESET + plugin.getConfig().getString("file-output-enabled"));
+
+		// output file update interval setting
+		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
+				+ ChatColor.GREEN + "File Update Period: "
+				+ ChatColor.RESET + plugin.getConfig().getInt("file-update-period"));
+
+		// output tps sample period setting
+		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
+				+ ChatColor.GREEN + "TPS Sample Period: "
+				+ ChatColor.RESET + plugin.getConfig().getInt("tps-sample-period"));
+
+		return true;
+	}
+
 }
