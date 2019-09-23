@@ -60,7 +60,7 @@ public class DataCache {
 				setUptime(System.currentTimeMillis() - serverStartTime);
 				setTps(TpsMeter.tps);
 			}
-		}.runTaskTimer(plugin, 0, 600);
+		}.runTaskTimerAsynchronously(plugin, 0, 600);
 	}
 
 
