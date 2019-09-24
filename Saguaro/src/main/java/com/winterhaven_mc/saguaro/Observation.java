@@ -144,6 +144,7 @@ public class Observation {
 		return memoryFree;
 	}
 
+	// get cacti compatible string of values
 	synchronized String getDataString() {
 
 		StringBuilder data = new StringBuilder();
