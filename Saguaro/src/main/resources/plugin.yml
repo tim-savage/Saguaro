@@ -2,7 +2,7 @@ name: Saguaro
 author: ${project.author}
 version: ${project.version}
 main: com.winterhaven_mc.saguaro.PluginMain
-api-version: 1.13
+api-version: 1.14
 
 commands:
    saguaro:
