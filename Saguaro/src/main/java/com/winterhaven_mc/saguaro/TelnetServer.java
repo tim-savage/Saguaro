@@ -62,6 +62,7 @@ public class TelnetServer implements Runnable {
 	/**
 	 * Run for the thread. Waits for new connections
 	 **/
+	@Override
 	public void run() {
 		boolean bError = false;
 		while (!bError) {
