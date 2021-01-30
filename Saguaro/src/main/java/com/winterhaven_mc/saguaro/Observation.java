@@ -9,7 +9,7 @@ import java.io.File;
 
 public class Observation {
 
-	private static long serverStartTime = System.currentTimeMillis();
+	private static final long serverStartTime = System.currentTimeMillis();
 
 	private final long timestamp;
 	private final double tps;
@@ -145,7 +145,7 @@ public class Observation {
 	}
 
 	// get cacti compatible string of values
-	synchronized String getDataString() {
+	String getDataString() {
 
 		StringBuilder data = new StringBuilder();
 
