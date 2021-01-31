@@ -9,13 +9,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class TpsMeter extends BukkitRunnable {
 
 	// ticks per second
-	private static double tps;
+	private static double tps = 0.0;
 
 	// sample end time
 	private long nanoEndTime;
 
 	// sample period
-	private long nanoSamplePeriod;
+	private final long nanoSamplePeriod;
 	
 
 	/**
