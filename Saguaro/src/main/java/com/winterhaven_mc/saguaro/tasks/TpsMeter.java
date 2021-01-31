@@ -9,17 +9,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class TpsMeter extends BukkitRunnable {
 
 	// ticks per second
-	public static double tps;
+	private static double tps = 0.0;
 
 	// sample end time
 	private long nanoEndTime;
 
 	// sample period
-	private long nanoSamplePeriod;
-	
+	private final long nanoSamplePeriod;
+
 
 	/**
 	 * Class constructor method
+	 *
 	 * @param plugin reference to plugin main class
 	 */
 	public TpsMeter(final PluginMain plugin) {
@@ -39,7 +40,12 @@ public class TpsMeter extends BukkitRunnable {
 		nanoEndTime = System.nanoTime();
 		double nanoElapsedTime = nanoEndTime - nanoStartTime;
 
-		tps = (double)nanoSamplePeriod / nanoElapsedTime * 20.0d;
+		tps = (double) nanoSamplePeriod / nanoElapsedTime * 20.0d;
+	}
+
+
+	public static double getTps() {
+		return tps;
 	}
 
 }

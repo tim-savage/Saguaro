@@ -14,7 +14,7 @@ public class FileWriter extends BukkitRunnable {
 
 	/**
 	 * Class constructor method
-	 * 
+	 *
 	 * @param plugin reference to plugin main class
 	 */
 	public FileWriter(PluginMain plugin) {
@@ -28,7 +28,7 @@ public class FileWriter extends BukkitRunnable {
 
 		File dataFile = new File(fileName);
 		try {
-			FileUtils.writeStringToFile(dataFile,plugin.dataCache.getDataString());
+			FileUtils.writeStringToFile(dataFile, plugin.dataCache.getDataString());
 		} catch (IOException e) {
 			plugin.getLogger().severe("Could not write to file!");
 			if (e.getLocalizedMessage() != null) {
