@@ -10,6 +10,7 @@ public class DataCache {
 
 	/**
 	 * Class constructor method
+	 *
 	 * @param plugin reference to plugin main class
 	 */
 	DataCache(final PluginMain plugin) {

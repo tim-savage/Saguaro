@@ -16,10 +16,11 @@ public class TpsMeter extends BukkitRunnable {
 
 	// sample period
 	private final long nanoSamplePeriod;
-	
+
 
 	/**
 	 * Class constructor method
+	 *
 	 * @param plugin reference to plugin main class
 	 */
 	public TpsMeter(final PluginMain plugin) {
@@ -39,7 +40,7 @@ public class TpsMeter extends BukkitRunnable {
 		nanoEndTime = System.nanoTime();
 		double nanoElapsedTime = nanoEndTime - nanoStartTime;
 
-		tps = (double)nanoSamplePeriod / nanoElapsedTime * 20.0d;
+		tps = (double) nanoSamplePeriod / nanoElapsedTime * 20.0d;
 	}
 
 

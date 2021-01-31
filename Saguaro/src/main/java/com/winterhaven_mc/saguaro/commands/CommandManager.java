@@ -142,6 +142,7 @@ public class CommandManager implements CommandExecutor {
 
 	/**
 	 * Display plugin status
+	 *
 	 * @param sender the command sender
 	 * @return always returns {@code true}, to prevent usage message
 	 */

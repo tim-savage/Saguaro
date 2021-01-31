@@ -12,8 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Original 
+ *
+ * Original
  */
 package com.winterhaven_mc.saguaro;
 
@@ -27,12 +27,12 @@ import java.io.PrintWriter;
 
 /**
  * Simple TCP server. Waits for connections on a TCP port in a separate thread.
- * 
+ * <p>
  * Original code by:
+ *
  * @author Bruno D'Avanzo
  * @author Modified by:<br>
- *         Tim Savage
- * 
+ * Tim Savage
  **/
 @SuppressWarnings("unused")
 public class TelnetServer implements Runnable {
@@ -47,6 +47,7 @@ public class TelnetServer implements Runnable {
 
 	/**
 	 * test of client-driven subnegotiation.
+	 *
 	 * @param port server port on which to listen.
 	 **/
 	public TelnetServer(PluginMain plugin, int port) throws IOException {

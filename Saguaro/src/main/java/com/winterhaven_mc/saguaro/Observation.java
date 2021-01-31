@@ -25,7 +25,7 @@ public class Observation {
 	private final long memoryFree;
 
 
-	Observation (final PluginMain plugin) {
+	Observation(final PluginMain plugin) {
 
 		// get current time stamp
 		this.timestamp = System.currentTimeMillis();
