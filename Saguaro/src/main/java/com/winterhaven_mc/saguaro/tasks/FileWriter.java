@@ -2,6 +2,7 @@ package com.winterhaven_mc.saguaro.tasks;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import com.winterhaven_mc.saguaro.PluginMain;
 import org.apache.commons.io.FileUtils;
@@ -9,8 +10,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class FileWriter extends BukkitRunnable {
 
-	private PluginMain plugin;
-	private String fileName;
+	private final PluginMain plugin;
+	private final String fileName;
 
 	/**
 	 * Class constructor method
@@ -28,7 +29,7 @@ public class FileWriter extends BukkitRunnable {
 
 		File dataFile = new File(fileName);
 		try {
-			FileUtils.writeStringToFile(dataFile, plugin.dataCache.getDataString());
+			FileUtils.writeStringToFile(dataFile, plugin.dataCache.getDataString(), Charset.defaultCharset());
 		} catch (IOException e) {
 			plugin.getLogger().severe("Could not write to file!");
 			if (e.getLocalizedMessage() != null) {
