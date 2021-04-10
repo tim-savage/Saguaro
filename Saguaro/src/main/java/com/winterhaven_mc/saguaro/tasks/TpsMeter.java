@@ -1,9 +1,9 @@
 package com.winterhaven_mc.saguaro.tasks;
 
-import java.util.concurrent.TimeUnit;
-
 import com.winterhaven_mc.saguaro.PluginMain;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.concurrent.TimeUnit;
 
 
 public class TpsMeter extends BukkitRunnable {
@@ -25,7 +25,7 @@ public class TpsMeter extends BukkitRunnable {
 	 */
 	public TpsMeter(final PluginMain plugin) {
 
-		// initalize nanoEndTime
+		// initialize nanoEndTime
 		this.nanoEndTime = System.nanoTime();
 
 		// get tps sample period from config
