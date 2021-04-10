@@ -1,12 +1,13 @@
 package com.winterhaven_mc.saguaro;
 
-import java.io.IOException;
-
 import com.winterhaven_mc.saguaro.commands.CommandManager;
 import com.winterhaven_mc.saguaro.tasks.FileWriter;
 import com.winterhaven_mc.saguaro.tasks.TpsMeter;
+
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.io.IOException;
 
 
 public final class PluginMain extends JavaPlugin {
@@ -31,8 +32,8 @@ public final class PluginMain extends JavaPlugin {
 
 		// instantiate TPS Meter
 		tpsMeterTask = new TpsMeter(this).runTaskTimer(this,
-				getConfig().getInt("tps-sample-period") * 20,
-				getConfig().getInt("tps-sample-period") * 20);
+				getConfig().getLong("tps-sample-period") * 20L,
+				getConfig().getLong("tps-sample-period") * 20L);
 
 		// instantiate data cache
 		dataCache = new DataCache(this);
@@ -40,7 +41,7 @@ public final class PluginMain extends JavaPlugin {
 		// if configured, start file writer task
 		if (getConfig().getBoolean("file-output-enabled", false)) {
 			fileWriterTask = new FileWriter(this).runTaskTimer(this, 0,
-					getConfig().getInt("file-update-period") * 20);
+					getConfig().getLong("file-update-period") * 20L);
 		}
 
 		// if configured, start telnet server
