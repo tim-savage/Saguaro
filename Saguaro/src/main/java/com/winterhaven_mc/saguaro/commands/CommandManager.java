@@ -1,26 +1,28 @@
 package com.winterhaven_mc.saguaro.commands;
 
-import java.io.IOException;
-
-import com.winterhaven_mc.saguaro.tasks.FileWriter;
 import com.winterhaven_mc.saguaro.PluginMain;
 import com.winterhaven_mc.saguaro.TelnetServer;
+import com.winterhaven_mc.saguaro.tasks.FileWriter;
 import com.winterhaven_mc.saguaro.tasks.TpsMeter;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.IOException;
+import java.util.Objects;
+
 
 public class CommandManager implements CommandExecutor {
 
 	// reference to main class
-	private PluginMain plugin;
+	private final PluginMain plugin;
 
 	public CommandManager(PluginMain plugin) {
 		this.plugin = plugin;
-		plugin.getCommand("saguaro").setExecutor(this);
+		Objects.requireNonNull(plugin.getCommand("saguaro")).setExecutor(this);
 	}
 
 
@@ -123,7 +125,7 @@ public class CommandManager implements CommandExecutor {
 		// start new file writer task if configured
 		if (plugin.getConfig().getBoolean("file-output-enabled")) {
 			plugin.fileWriterTask = new FileWriter(plugin).runTaskTimer(plugin, 0,
-					plugin.getConfig().getInt("file-update-period") * 20);
+					plugin.getConfig().getLong("file-update-period") * 20L);
 		}
 
 		// cancel TpsMeter task if it is running
@@ -133,8 +135,8 @@ public class CommandManager implements CommandExecutor {
 
 		// start new TpsMeter task
 		plugin.tpsMeterTask = new TpsMeter(plugin).runTaskTimer(plugin,
-				plugin.getConfig().getInt("tps-sample-period") * 20,
-				plugin.getConfig().getInt("tps-sample-period") * 20);
+				plugin.getConfig().getLong("tps-sample-period") * 20L,
+				plugin.getConfig().getLong("tps-sample-period") * 20L);
 
 		return true;
 	}
@@ -182,12 +184,12 @@ public class CommandManager implements CommandExecutor {
 		// output file update interval setting
 		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
 				+ ChatColor.GREEN + "File Update Period: "
-				+ ChatColor.RESET + plugin.getConfig().getInt("file-update-period"));
+				+ ChatColor.RESET + plugin.getConfig().getLong("file-update-period"));
 
 		// output tps sample period setting
 		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
 				+ ChatColor.GREEN + "TPS Sample Period: "
-				+ ChatColor.RESET + plugin.getConfig().getInt("tps-sample-period"));
+				+ ChatColor.RESET + plugin.getConfig().getLong("tps-sample-period"));
 
 		return true;
 	}
