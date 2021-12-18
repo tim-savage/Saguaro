@@ -5,6 +5,9 @@
 	<artifactId>Saguaro</artifactId>
 	<version>1.0.2</version>
 	<name>Saguaro</name>
+
+	<url>https://github.com/tim-savage/Saguaro</url>
+
 	<description>monitor server statistics and output for graphing with Cacti</description>
 
 	<properties>
@@ -48,7 +51,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.7</version>
+			<version>2.11.0</version>
 		</dependency>
 	</dependencies>
 
@@ -61,6 +64,31 @@
 		</resources>
 
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>ban-bad-log4j-versions</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<bannedDependencies>
+									<excludes>
+										<exclude>org.apache.logging.log4j:log4j-core:(,2.15.0)</exclude>
+									</excludes>
+								</bannedDependencies>
+							</rules>
+							<fail>true</fail>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- Compilation plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
