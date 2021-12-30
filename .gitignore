@@ -1,3 +1,4 @@
+
 # Created by https://www.gitignore.io/api/intellij,maven,eclipse,linux,osx
 
 ### Intellij ###
@@ -10,7 +11,6 @@
 .idea/dictionaries
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
-.idea/libraries
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids
@@ -22,6 +22,7 @@
 
 # Gradle:
 .idea/gradle.xml
+.idea/libraries
 
 # Mongo Explorer plugin:
 .idea/mongoSettings.xml
@@ -33,10 +34,8 @@
 
 # IntelliJ
 /out/
-.idea
-*.iml
-modules.xml
-vcs.xml
+
+/.idea/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -49,6 +48,14 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+### Intellij Patch ###
+# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
+
+*.iml
+modules.xml
+vcs.xml
+
 
 ### Maven ###
 target/
