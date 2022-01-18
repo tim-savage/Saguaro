@@ -11,6 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -27,7 +28,10 @@ public class CommandManager implements CommandExecutor {
 
 
 	@Override
-	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(final @Nonnull CommandSender sender,
+	                         final @Nonnull Command cmd,
+	                         final @Nonnull String label,
+	                         final String[] args) {
 
 		int maxArgs = 1;
 		if (args.length > maxArgs) {
