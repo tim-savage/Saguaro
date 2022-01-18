@@ -13,6 +13,7 @@
 	<properties>
 		<project.author>Tim Savage</project.author>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.java.version>11</project.java.version>
 	</properties>
 
 	<licenses>
@@ -57,7 +58,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.16.5-R0.1-SNAPSHOT</version>
+			<version>1.18.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -92,7 +93,7 @@
 							<rules>
 								<bannedDependencies>
 									<excludes>
-										<exclude>org.apache.logging.log4j:log4j-core:(,2.15.0)</exclude>
+										<exclude>org.apache.logging.log4j:log4j-core:(,2.17.0)</exclude>
 									</excludes>
 								</bannedDependencies>
 							</rules>
@@ -108,8 +109,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${project.java.version}</source>
+					<target>${project.java.version}</target>
 				</configuration>
 			</plugin>
 
@@ -117,7 +118,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>3.2.4</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -140,9 +141,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.3.1</version>
 				<configuration>
-					<source>8</source>
+					<source>${project.java.version}</source>
 					<doclint>all,-missing</doclint>
 				</configuration>
 				<executions>
@@ -159,7 +160,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.2.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
