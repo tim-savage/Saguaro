@@ -21,7 +21,7 @@ public class CommandManager implements CommandExecutor {
 	// reference to main class
 	private final PluginMain plugin;
 
-	public CommandManager(PluginMain plugin) {
+	public CommandManager(final PluginMain plugin) {
 		this.plugin = plugin;
 		Objects.requireNonNull(plugin.getCommand("saguaro")).setExecutor(this);
 	}

@@ -18,7 +18,7 @@ public class FileWriter extends BukkitRunnable {
 	 *
 	 * @param plugin reference to plugin main class
 	 */
-	public FileWriter(PluginMain plugin) {
+	public FileWriter(final PluginMain plugin) {
 
 		this.plugin = plugin;
 		this.fileName = plugin.getDataFolder() + File.separator + "cacti_data.txt";
